@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="/static/PT.css">
+  <title>Steam Calculator</title>
+</head>
+<body>
+  <header>
+  <div class="header">
+    
+    <h1>Steam Calculator</h1>
+  </div>
+  </header>
+  <form class="grid" id="form" action="." method="post">
+    <p id="rad" type="rad">
+    <input type="radio" name="genre" value="rock" 
+         checked="checked" /> Wet
+
+    <input type="radio" name="genre" value="pop" /> 
+                Saturated
+
+    <input type="radio" name="genre" value="jazz" /> 
+              Superheated
+          </p>
+    <label for="input-select"></label>
+    <select name="condition" id="input-select" onchange="selectInput()">
+      <option value="PT">Pressure and Temperature (p-t)</option>
+      <option value="PE">Pressure and Entropy (p-s)</option>
+      <option value="PH">Pressure and Enthalpy (p-h)</option>
+      <option value="PX">Pressure and Dryness (p-x)</option>
+    </select>
+  
+  
+    
+    <div id="PT-div" style="display: none;">
+    <label id="PT1-label" for="PT">Pressure(MPa)</label>
+    <input type="text" id="PT" name="pressure" step="0.01" placeholder="Enter Pressure" value="{{ request.form['pressure'] }}">
+    <br>
+    <label id="PT2-label" for="PT">Temperature(°C)</label>
+    <input type="text" id="PT" name="temperature" step="0.01" placeholder="Enter Temperature" value="{{ request.form['temperature'] }}">
+    </div>
+    <div id="PE-div" style="display: none;">
+    <label id="PE1-label" for="PE">Pressure(MPa)</label>
+    <input type="text" id="PE" name="pressure" step="0.01" placeholder="Enter Pressure" value="{{ request.form['pressure'] }}">
+    <br>
+    <label id="PE2-label" for="PE">Entropy(kJ/kg-K)</label>
+    <input type="text" id="PE" name="entropy" step="0.01" placeholder="Enter Entropy" value="{{ request.form['entropy'] }}">
+    </div>
+
+
+    <div id="PH-div" style="display: none;">
+    <label id="PH1-label" for="PH">Pressure(MPa)</label>
+    <input type="text" id="PH" name="pressure" step="0.01" placeholder="Enter Pressure" value="{{ request.form['pressure'] }}">
+    <br>
+    <label id="PH2-label" for="PE">Enthalpy(kJ/kg-K)</label>
+    <input type="text" id="PH" name="enthalpy" step="0.01" placeholder="Enter Enthalpy" value="{{ request.form['enthalpy'] }}">
+    </div>
+
+    <div id="PX-div" style="display: none;">
+    <label id="PX1-label" for="PX">Pressure(MPa)</label>
+    <input type="text" id="PX" name="pressure" step="0.01" placeholder="Enter Pressure" value="{{ request.form['pressure'] }}">
+    <br>
+    <label id="PX2-label" for="PX">Entropy(kJ/kg-K)</label>
+    <input type="text" id="PX" name="dryness" step="0.01" placeholder="Enter Dryness" value="{{ request.form['dryness'] }}">
+    </div>
+
+
+    <br>
+    <button type="submit" onclick="showGraph()">Go</button><br>
+    <br>
+    
+    
+
+    {% if result %}
+    <div id="graph-div"  >
+      <img src="{{url_for('static', filename='scatter_plot.png')}}" alt="scatter_plot">
+    </div>
+    <div id="result">
+      <h4>Result:</h4>
+    
+    
+      <ul>
+        
+          <li style="color: rgba(195, 227, 230, 0.851);"> Phase       =   <b>{{Phase}}</b>  </li>
+          <li> Saturation Temperature(°C) = <b>{{result[3]}}</b>°C</li>
+          <li>Specific Volume(v) = <b>{{result[4]}}</b> m<sup>3</sup>/kg</li>
+          <li>Density = <b>{{result[5]}}</b> kg/m<sup>3</sup></li>
+          <li>Internal Energy(u) = <b>{{result[6]}}</b> kJ/kg</li>
+          <li>Specific Enthalpy(h) = <b>{{result[0]}}</b> kJ/kg</li>
+          <li>Specific Entropy(s) = <b>{{result[1]}}</b> kJ/kg K</li>
+      </ul>
+     </div>
+  
+  
+    {% endif %}
+
+ 
+    </form>
+  
+    <script src="/static/Query.js"></script>
+
+
+
+  <script>
+    function showGraph() {
+    var graphDiv = document.getElementById("graph-div");
+    graphDiv.style.display = "block";
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Parse the JSON response from the server
+            var response = JSON.parse(xhr.responseText);
+            // Update the result element with the new data
+            document.getElementById("result").innerHTML = response.html;
+        }
+    };
+    xhr.send("pressure=" + document.getElementById("PT").value + "&temperature=" + document.getElementById("PT").value);
+}
+
+
+
+      function selectInput() {
+        var inputSelect = document.getElementById("input-select");
+        var selectedValue = inputSelect.options[inputSelect.selectedIndex].value;
+    
+        if (selectedValue === "PT") {
+          document.getElementById("PT-div").style.display = "block";
+          document.getElementById("PT1-label").innerHTML = "Pressure:";
+          document.getElementById("PE-div").style.display = "none";
+          document.getElementById("PT2-label").innerHTML = "Temperature:";
+          document.getElementById("PH-div").style.display = "none";
+          document.getElementById("PX-div").style.display = "none";
+        } else if (selectedValue === "PE") {
+          document.getElementById("PT-div").style.display = "none";
+          document.getElementById("PH-div").style.display = "none";
+          document.getElementById("PX-div").style.display = "none";
+          document.getElementById("PE1-label").innerHTML = "Pressure:";
+          document.getElementById("PE-div").style.display = "block";
+          document.getElementById("PE2-label").innerHTML = "Entropy:";
+        } else if (selectedValue === "PH") {
+          document.getElementById("PT-div").style.display = "none";
+          document.getElementById("PE-div").style.display = "none";
+          document.getElementById("PX-div").style.display = "none";
+          document.getElementById("PH1-label").innerHTML = "Pressure:";
+          document.getElementById("PH-div").style.display = "block";
+          document.getElementById("PH2-label").innerHTML = "Enthalpy:";
+        } else if (selectedValue === "PX") {
+          document.getElementById("PT-div").style.display = "none";
+          document.getElementById("PH-div").style.display = "none";
+          document.getElementById("PE-div").style.display = "none";
+          document.getElementById("PX1-label").innerHTML = "Pressure:";
+          document.getElementById("PX-div").style.display = "block";
+          document.getElementById("PX2-label").innerHTML = "Dryness:";
+        }
+    
+      }
+    document.getElementById("input-select").value = "PT";
+    selectInput();
+    
+
+    </script>
+    
+
+  
+    
+    
+
+</body>
+</html>
