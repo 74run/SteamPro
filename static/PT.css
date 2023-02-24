@@ -1,0 +1,577 @@
+body {
+  /* Add the url of your background image */
+background-size: cover; /* Scale the background image to cover the entire webpage */
+font-family: Arial, sans-serif; /* Change the font to Arial */
+color: white; /* Change the text color to white */
+background-color: black;
+overflow: auto;
+background-repeat: no-repeat;
+background-attachment: fixed;
+height: 100vh;
+
+}
+
+.header {
+background-color: black; /* Add a background color to the header */
+padding: 0px; /* Add padding to the header */
+text-align: center; /* Center the text in the header */
+color: #fff; /* Add a color to the text in the header */
+font-size: 100%; /* Change the font size of the text in the header */
+font-weight: bold; /* Change the font weight of the text in the header */
+font-family: 'Open Sans', sans-serif; /* Change the font family of the*/
+opacity: 100%;
+display: block;
+justify-content: center;
+text-align: center;
+align-items: center;
+margin-left: 0px;
+
+}
+
+
+form {
+/*background-image: url("https://free4kwallpapers.com/uploads/originals/2019/08/12/ice-and-glaciers-wallpaper.jpg");*/
+background-image: url("https://cdn.pixabay.com/photo/2017/07/03/11/58/smoke-2467437_960_720.jpg");
+background-color: rgba(15, 14, 14, 0.223); /* Add a transparent background color to the form */
+padding: 0px; /* Add padding to the form */
+border-radius: 10px; /* Add rounded edges to the form */
+border: 1px solid #e5e5e5;
+box-shadow: 0px 0px 5px #e5e5e5;
+width: 100%;
+margin-left: 0%;
+background-size: cover;
+font-family: Arial, sans-serif; /* Change the font to Arial */
+color: white; /* Change the text color to white */
+background-color: black;
+overflow: hidden;
+background-repeat: no-repeat;
+background-attachment: fixed;
+
+/* Add a border to the form */
+/* Add a box shadow to the form */
+
+
+}
+
+button {
+background-color: #3509e7; /* Change the background color of the submit button */
+color: white; /* Change the text color of the submit button */
+padding: 12px 20px; /* Add padding to the submit button */
+border: none; /* Remove the border of the submit button */
+border-radius: 8px; /* Add rounded edges to the submit button */
+cursor: pointer; /* Change the cursor to a pointer when hovering over the submit button */
+margin: auto; /* Add margin:auto to the submit button */
+display: flex; /* Display the form as a flex container */
+justify-content: center; /* Center the form horizontally */
+align-items: center; /* Center the form vertically */
+flex-wrap: wrap; /* Wrap the form elements if they exceed the width of the container */
+align-content: flex-start;
+flex-direction: column; /* Make the form elements appear vertically stacked */
+width: auto; /* Make the form elements fill the container */
+height: auto; /* Make the form elements fill the container */
+border: 1px solid #ccc; /* Add a border to the form elements */
+position: relative;
+right: 0%;
+
+}
+
+#result h4 {
+position: relative; /* Position the label absolute */
+display:flex;
+justify-content: center;
+text-align: center;
+align-items: center;
+letter-spacing: 4px;
+font-size: 18px;
+color: #fff; /* Add a color to the text in the header */
+background-color: #00bcd4; /* Add a color to the */
+background-image: linear-gradient(to right, #2000d4, #d40000);
+line-height: 45px;
+width: 100%; /* Add a color to the */
+bottom: 20%;
+right: 0%;
+color:rgb(246, 242, 242);
+font-size: 20px;
+font-weight: bold; /* Change the font weight of the text in the header */
+text-transform: uppercase; /* Change the text transform of the label */
+letter-spacing: 1px; /* Add a letter spacing of 1px to the label */
+text-decoration: none; /* Remove the text decoration of the label */
+text-shadow: 0px 0px 1px #000; /* Add a shadow to the label*/
+
+}
+select:hover {
+background-color: #e5e5e5; /* Change the background color of the dropdown box when hovered */
+cursor: pointer; /* Change the cursor to a pointer when hovered */
+opacity: 95%;
+  
+}
+
+select:active {
+  background-color: #d5d5d5; /* Change the background color of the dropdown box when active */
+  cursor: pointer; /* Change the cursor to a pointer when active */
+  
+  
+  }
+
+label, input, select, span {
+  display: inline-block;
+  margin-left: 20px;
+  margin-right: 10px;
+  justify-content: center;
+  text-align: left;
+  align-items: center;
+  font-size: 18px;
+}
+
+#input-select{
+  display: inline-flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  width: 90%;
+  margin-left: 50px;
+  margin-top: 40px;
+  
+  font-weight: bold;
+  border-radius: 8px; /* Add rounded edges to the input fields */
+  padding: 10px 20px; /* Add padding to the select input */
+ 
+  border: 1px solid #ccc; /* Remove the border of the select input */
+  background-color: #f5f5f5; /* Add a background color to the dropdown box */
+  margin-bottom: 30px;
+  appearance: none; /* Remove the default appearance of the dropdown box */
+  -webkit-appearance: none; /* Remove the default appearance of the dropdown box for webkit browsers */
+  -moz-appearance: none; /* Remove the default appearance of the dropdown box for mozilla browsers */
+  -webkit-border-radius: 0; /* Remove the rounded edges of the dropdown box */
+ 
+
+}
+
+
+.PT, #PE, #PH, #PX, #TE,#TH,#TX,#HE,#HX,#EX{
+  display: inline-flex;
+  justify-content: left;
+  text-align: center;
+  align-items: left;
+  width: 20%;
+  position: relative;
+  right: 9%;
+  
+}
+
+#pressure-error, #temperature-error {
+
+  display:inline;
+  justify-items: left;
+  align-items: left;
+  text-align: justify;
+  margin-left: 25%;
+  white-space: nowrap;
+
+}
+
+.input-units  {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  line-height: 1;
+  width: 100px;
+  height: 35px;
+  right: 0%;
+  background-color: white;
+  color: black;
+  border-radius: 4px;
+  margin: 0px 0px 20px 30px;
+  padding: 2px 2px;
+  font-weight: bold;
+
+}
+
+.input-unit  {
+  display: inline-block;
+  position: relative;
+  justify-content: right;
+  text-align: center;
+  align-items: right;
+  vertical-align: middle;
+  line-height: 1;
+  width: 12%;
+  height: 35px;
+  right: 15%;
+  background-color: white;
+  color: black;
+  border-radius: 4px;
+  margin: 0px 0px 20px 30px;
+  right: 12%;
+  padding: 2px 2px;
+  font-weight: bold;
+
+}
+
+input {
+  background-color: white; /* Change the background color of the input fields */
+  padding: 2px 2px; /* Add padding to the input fields */
+  border: none; /* Remove the border of the input fields */
+  border-radius: 4px; /* Add rounded edges to the input fields */
+  margin: 0px 0px; /* Add margin to the input fields */
+  width: 100%; /* Set the width of the input fields to 60% of the parent container */
+  display: inline-block; /* Display the input fields as an inline-block element */
+  clear: both; /* Clear the float */
+  position: relative;
+  right: 12%;
+  vertical-align: middle;
+  height: 30px;
+  font-size: 18px;
+ 
+  color: black;
+  text-align: center; /* Center the text in the result section */
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2); /* Add a box-shadow to the result section */
+  margin-bottom: 20px;
+  font-weight: bold; /* Change the font weight of the text in the header */
+
+  
+  
+  }
+label {
+  color: white;
+  font-weight: bold; /* Make the label text bold */
+  display: inline-block; /* Display the label as an inline-block element */
+  width: 40%; /* Set the width of the label to 30% of the parent container */
+  text-align: left; /* Align the text in the label to the right */
+  padding-right: 10px; /* Add padding to the right of the label */
+  vertical-align: middle;
+  opacity: 100%;
+  text-shadow: #000;
+  position: relative;
+  margin-bottom: 20px;
+  left:15%;
+  
+  
+  
+  }
+
+span {
+  color: white;
+  font-weight: bold; /* Make the label text bold */
+  display: inline-block; /* Display the label as an inline-block element */
+  width: 40%; /* Set the width of the label to 30% of the parent container */
+  text-align: left; /* Align the text in the label to the right */
+  padding-right: 10px; /* Add padding to the right of the label */
+  vertical-align: middle;
+  opacity: 100%;
+  text-shadow: #000;
+  position: relative;
+  margin-bottom: 20px;
+  right:0%;
+  font-weight: bold;
+
+}
+
+
+#p{
+  display: inline-flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  width: 25%;
+  left:2%;
+  
+}
+
+
+#d{
+  display: inline-flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  width: 25%;
+  position: relative;
+  left: 2%;
+
+}
+
+#r{
+  display: inline-block;
+  width: 30%;
+  justify-content: left;
+  text-align: left;
+}
+
+
+span, input, select {
+  display: inline-block;
+  margin-left: 20px;
+  margin-right: 10px;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  font-size: 18px;
+
+}
+#result ul {
+  list-style-type: none; /* Remove the bullet points from the list */
+
+   }
+
+
+#result {
+    background-color: rgba(21, 21, 21, 0.2); /* Add a transparent background color to the result section */
+    border-radius: 10px; /* Add rounded edges to the result section */
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2); /* Add a box-shadow to the result section */
+    border: 1px solid #ccc;
+    display: block; /* Display the result section as a flex element */
+    margin: 10px 10px 10px 10px;
+  }
+
+
+  #logo {
+    background: #000;
+      width: 40%;
+      height: 20%;
+      display: flex;
+      position: relative;
+      left:55%;
+    
+      }
+
+ nav{
+    display: flex;
+    background: #000;
+    align-items: center;
+    position: sticky;
+    top:0;
+    z-index: 100;
+  }
+
+  footer {
+    background-color: #000;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+  }
+ 
+ 
+
+
+
+
+/* Style for the left and right sidebars */
+      .sidebar {
+        flex-basis: 25%;
+        padding: 20px;
+        height: 100%;
+        box-sizing: border-box;
+      }
+      
+      /* Style for the main content */
+      .main {
+        
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      
+      /* Style for the page container */
+      .container {
+        display: flex;
+        flex-direction: row;
+      }
+
+      /* Media query for screens smaller than 768px */
+ @media screen and (max-width: 768px) {
+        .sidebar {
+          display: none;
+        }
+        .main {
+          width: 100%;
+        }
+        #input-select{
+        
+          border-radius: 4px;
+          font-size: 75%;
+          margin-right: 25%;
+          width: 90%;
+          margin-left: 5%;
+          margin-top: 20px;
+
+        }
+        label{
+          color: white;
+          font-weight: bold; /* Make the label text bold */
+          display: inline-block; /* Display the label as an inline-block element */
+          width: 30%; /* Set the width of the label to 30% of the parent container */
+          text-align: left; /* Align the text in the label to the right */
+          padding-right: 0px; /* Add padding to the right of the label */
+          vertical-align: middle;
+          position: relative;
+          margin: 0 0 4% 0%;
+          left:5%;
+          font-size: 75%;
+        }
+
+   
+        
+
+        span, input, select {
+          display: inline-block;
+          margin-left: 0%;
+          margin-right: 0;
+          justify-content: center;
+          text-align: center;
+          align-items: center;
+          font-size: 75%;
+        
+        }
+
+        
+
+        #r{
+          color: white;
+          font-weight: bold; /* Make the label text bold */
+          display: inline-block; /* Display the label as an inline-block element */
+          width: 18%; /* Set the width of the label to 30% of the parent container */
+          text-align: left; /* Align the text in the label to the right */
+          padding-right: 0px; /* Add padding to the right of the label */
+          vertical-align: middle;
+          position: relative;
+          margin: 0 0 4% 0%;
+          left:0%;
+          font-size: 75%;
+
+        }
+
+        #d{
+          display: inline-block;
+         
+          text-align: center;
+          font-size: 75%;
+          width: 35%;
+          position: relative;
+          margin: 0 0% 4% 8%;
+          left: 2%;
+        }
+
+        .PT, #PE, #PH, #PX, #TE,#TH,#TX,#HE,#HX,#EX{
+          display: inline-block;
+          
+          text-align: center;
+          font-size: 75%;
+          width: 35%;
+          position: relative;
+          margin: 0 0% 4% 0%;
+          left: 2%;
+          
+        }
+
+
+  
+
+
+
+        .input-units  {
+          display: inline-block;
+          position: relative;
+          justify-content: right;
+          vertical-align: middle;
+          line-height: 1;
+          width: 18%;
+          
+          left: 6%;
+          font-size: 75%;
+          background-color: white;
+          color: black;
+          border-radius: 4px;
+          margin: 0px 0px 4% 0%;
+          padding: 1% 1%;
+          font-weight: bold;
+
+        
+        }
+
+
+
+        .input-unit{
+          display: inline-block;
+          position: relative;
+          justify-content: right;
+          text-align: center;
+      
+          vertical-align: middle;
+          line-height: 1;
+          width: 18%;
+          
+          font-size: 75%;
+          background-color: white;
+          color: black;
+          border-radius: 4px;
+          margin: 0px 0% 4% 0%;
+          left: 6%;
+          padding: 1% 1%;
+          font-weight: bold;
+          
+        }
+
+        #logo {
+          background: #000;
+            width: 100%;
+            height: 50%;
+            display: flex;
+            position: relative;
+            left:0%;
+          
+            }
+
+   
+
+  
+        button {
+          background-color: #6200EE; /* Change the background color of the submit button */
+          color: white; /* Change the text color of the submit button */
+          padding: 10px 18px; /* Add padding to the submit button */
+          font-size: 75%;
+          border-radius: 4px; /* Add rounded edges to the submit button */
+          cursor: pointer; /* Change the cursor to a pointer when hovering over the submit button */
+          margin: auto; /* Add margin:auto to the submit button */
+          display: flex; /* Display the form as a flex container */
+          justify-content: center; /* Center the form horizontally */
+          align-items: center; /* Center the form vertically */
+          flex-wrap: wrap; /* Wrap the form elements if they exceed the width of the container */
+          align-content: flex-start;
+          flex-direction: column; /* Make the form elements appear vertically stacked */
+          width: auto; /* Make the form elements fill the container */
+          height: auto; /* Make the form elements fill the container */
+          border: 1px solid #ccc; /* Add a border to the form elements */
+          position: relative;
+          right: 0%;
+          
+          }
+
+       
+
+          
+          
+     
+
+          ul {
+            display: block;
+            list-style-type: disc;
+            margin-block-start: 0em;
+            margin-block-end: 2em;
+            margin-inline-start: 0px;
+            margin-inline-end: 0px;
+            padding-inline-start: 25px;
+        }
+          
+
+
+      }
+
+      /* Media query for screens larger than 768px */
+      @media screen and (min-width: 768px) {
+        .sidebar {
+          width: 25%;
+          display: block;
+        }
+        .main {
+          width: 50%;
+        }
+      }

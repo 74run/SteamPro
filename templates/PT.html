@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <link rel="icon" type="icon" href="/static/logo.png">
+  <link rel="stylesheet" type="text/css" href="/static/PT.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Steam Calculator</title>
+  </head>
+  <body>
+<nav>
+    <div class="header">
+      <h1><img src="/static/steam-logo.png" alt="logo" id="logo" class="logo"></h1>
+   </div>
+</nav>
+    
+    <div class="container">
+      <div class="sidebar">
+    
+      </div>
+      <div class="main">
+        <h1></h1>
+        <form class="grid" id="form" action="./result" method="post" >
+
+    <select name="condition" id="input-select" onChange=selectInput() class="input-select">
+      <option value="PT">Pressure and Temperature (P-T)</option>
+      <option value="PE">Pressure and Entropy (P-S)</option>
+      <option value="PH">Pressure and Enthalpy (P-H)</option>
+      <option value="PX">Pressure and Dryness (P-X)</option>
+      <option value="TE">Temperature and Entropy (T-S)</option>
+      <option value="TH">Temperature and Enthalpy (T-H)</option>
+      <option value="TX">Temperature and Dryness (T-X)</option>
+      <option value="HE">Enthalpy and Entropy (H-S)</option>
+      <option value="HX">Enthalpy and Dryness (H-X)</option>
+      <option value="EX">Entropy and Dryness (S-X)</option>
+    </select>
+
+
+
+     
+    <div id="PT-div" style="display: none;">
+    <label id="PT1-label" for="PT">Pressure :</label>
+    <input type="number" class="PT" id="PTP" name="pressure" min="0" max="1000" step="0.01" placeholder="Enter Pressure" value="{{ request.form['pressure'] }}" oninput="checkPressureValidity()">
+    <select name="units_pressure" id="pressure-unit" class="input-unit">
+      <option value="MPA" >MPa</option>
+      <option value="BAR" >bar</option>
+    </select>
+  
+    <br>
+    <label id="PT2-label" for="PT">Temperature :</label>
+    <input type="number" class="PT" id="PTT" name="temperature" min="0" max="2000" step="0.01" placeholder="Enter Temperature" value="{{ request.form['temperature'] }}" oninput="checkTemperatureValidity()">
+    <select name="units_temperature" id="temperature-unit" class="input-unit">
+      <option value="C">°C</option>
+      <option value="F" >°F</option>
+    </select>
+      <br>
+    </div>
+
+
+
+
+
+    <div id="PE-div" style="display: none;">
+    <label id="PE1-label" for="PE">Pressure :</label>
+    <input type="number" class="PE" id="PE" min="0" max="1000" name="pressure1" step="0.01" placeholder="Enter Pressure" value="{{ request.form['pressure1'] }}">
+    <select name="units_pressure1" id="pressure1-unit" class="input-unit">
+      <option value="MPA">MPa</option>
+      <option value="BAR">bar</option>
+    </select>
+   
+    <br>
+    <label id="PE2-label" for="PE">Entropy :</label>
+    <input type="text" class="PE" id="PE" name="entropy" step="0.01" placeholder="Enter Entropy" value="{{ request.form['entropy'] }}">
+    <select name="units_entropy" id="entropy-unit" class="input-unit">
+      <option value="kJ/kg-K">kJ/kg-K</option>
+      <option value="J/kg-K">J/kg-K</option>
+    </select>
+    </div>
+  
+    <div id="PH-div" style="display: none;">
+    <label id="PH1-label" for="PH">Pressure :</label>
+    <input type="number" id="PH" name="pressure2" step="0.01" min="0" max="1000" placeholder="Enter Pressure" value="{{ request.form['pressure2'] }}">
+    <select name="units_pressure2" id="pressure2-unit" class="input-unit">
+      <option value="MPA">MPa</option>
+      <option value="BAR">bar</option>
+    </select>
+    <br>
+    <label id="PH2-label" for="PE">Enthalpy :</label>
+    <input type="text" id="PH" name="enthalpy" step="0.01" placeholder="Enter Enthalpy" value="{{ request.form['enthalpy'] }}">
+    <select name="units_enthalpy" id="enthalpy-unit" class="input-unit">
+      <option value="kJ/kg">kJ/kg</option>
+      <option value="J/kg">J/kg</option>
+    </select>
+    </div>
+    
+
+    <div id="PX-div" style="display: none;">
+    <label id="PX1-label" for="PX">Pressure :</label>
+    <input type="text" id="PX" name="pressure3" step="0.01" min="0" max="1000" placeholder="Enter Pressure" value="{{ request.form['pressure3'] }}">
+    <select name="units_pressure3" id="pressure3-unit" class="input-unit">
+      <option value="MPA">MPa</option>
+      <option value="BAR">bar</option>
+    </select>
+   
+    <br>
+    <label id="PX2-label" for="PX">Dryness :</label>
+    <input type="text" id="PX" name="dryness" step="0.01" placeholder="Enter Dryness" value="{{ request.form['dryness'] }}">
+    <select name="units_dryness" id="dryness-unit" class="input-unit">
+      <option value="f">fraction</option>
+      <option value="%">%</option>
+    </select>
+    </div>
+
+
+    <div id="TE-div" style="display: none;">
+    <label id="TE1-label" for="PX">Temperature :</label>
+    <input type="text" id="TE" name="temperature1" step="0.01" min="0" max="2000" placeholder="Enter Temperature" value="{{ request.form['temperature1'] }}">
+    <select name="units_temperature1" id="temperature1-unit" class="input-unit">
+      <option value="C">°C</option>
+      <option value="F">°F</option>
+    </select>
+    
+    <br>
+    <label id="TE2-label" for="TE">Entropy :</label>
+    <input type="text" id="TE" name="entropy1" step="0.01" placeholder="Enter Entropy" value="{{ request.form['entropy1'] }}">
+    <select name="units_entropy1" id="entropy1-unit" class="input-unit">
+      <option value="kJ/kg-K">kJ/kg-K</option>
+      <option value="J/kg-K">J/kg-K</option>
+    </select>
+    </div>
+
+
+    <div id="TH-div" style="display: none;">
+    <label id="TH1-label" for="TH">Temperature :</label>
+    <input type="text" id="TH" name="temperature2" step="0.01" min="0" max="2000" placeholder="Enter Temperature" value="{{ request.form['temperature2'] }}">
+    <select name="units_temperature2" id="temperature2-unit" class="input-unit">
+      <option value="C">°C</option>
+      <option value="F">°F</option>
+    </select>
+    <br>
+    <label id="TH2-label" for="TH">Enthalpy :</label>
+    <input type="text" id="TH" name="enthalpy1" step="0.01" placeholder="Enter Enthalpy" value="{{ request.form['enthalpy1'] }}">
+    <select name="units_enthalpy1" id="enthalpy1-unit" class="input-unit">
+      <option value="kJ/kg">kJ/kg</option>
+      <option value="J/kg">J/kg</option>
+    </select>
+    </div>
+
+    <div id="TX-div" style="display: none;">
+    <label id="TX1-label" for="TX">Temperature :</label>
+    <input type="text" id="TX" name="temperature3" step="0.01" min="0" max="2000" placeholder="Enter Temperature" value="{{ request.form['temperature3'] }}">
+    <select name="units_temperature3" id="temperature3-unit" class="input-unit">
+      <option value="C">°C</option>
+      <option value="F">°F</option>
+    </select>
+    <br>
+    <label id="TX2-label" for="TX">Dryness :</label>
+    <input type="text" id="TX" name="dryness1" step="0.01"  placeholder="Enter Dryness" value="{{ request.form['dryness1'] }}">
+    <select name="units_dryness1" id="dryness1-unit" class="input-unit">
+      <option value="f">fraction</option>
+      <option value="%">%</option>
+    </select>
+    </div>
+
+
+    <div id="HE-div" style="display: none;">
+      <label id="HE1-label" for="HE">Enthalpy :</label>
+      <input type="text" id="HE" name="enthalpy2" step="0.01" placeholder="Enter Enthalpy" value="{{ request.form['enthalpy2'] }}">
+      <select name="units_enthalpy2" id="enthalpy2-unit" class="input-unit">
+        <option value="kJ/kg">kJ/kg</option>
+        <option value="J/kg">J/kg</option>
+      </select>
+    <br>
+    <label id="HE2-label" for="HE">Entropy :</label>
+    <input type="text" id="HE" name="entropy2" step="0.01" placeholder="Enter Entropy" value="{{ request.form['entropy2'] }}">
+    <select name="units_entropy2" id="entropy2-unit" class="input-unit">
+      <option value="kJ/kg-K">kJ/kg-K</option>
+      <option value="J/kg-K">J/kg-K</option>
+    </select>
+    </div>
+
+
+    <div id="HX-div" style="display: none;">
+      <label id="HX1-label" for="HX">Enthalpy :</label>
+      <input type="text" id="HX" name="enthalpy3" step="0.01" placeholder="Enter Enthalpy" value="{{ request.form['enthalpy3'] }}">
+      <select name="units_enthalpy3" id="enthalpy3-unit" class="input-unit">
+        <option value="kJ/kg">kJ/kg</option>
+        <option value="J/kg">J/kg</option>
+      </select>
+    <br>
+    <label id="HX2-label" for="HX">Dryness :</label>
+    <input type="text" id="HX" name="dryness2" step="0.01" placeholder="Enter Dryness" value="{{ request.form['dryness2'] }}">
+    <select name="units_dryness2" id="dryness2-unit" class="input-unit">
+      <option value="f">fraction</option>
+      <option value="%">%</option>
+    </select>
+    </div>
+
+
+    <div id="EX-div" style="display: none;">
+      <label id="EX1-label" for="EX">Entropy :</label>
+      <input type="text" id="EX" name="entropy3" step="0.01" placeholder="Enter Entropy" value="{{ request.form['entropy3'] }}">
+      <select name="units_entropy3" id="entropy3-unit" class="input-unit">
+        <option value="kJ/kg-K">kJ/kg-K</option>
+        <option value="J/kg-K">J/kg-K</option>
+      </select>
+    <br>
+    <label id="EX2-label" for="EX">Dryness :</label>
+    <input type="text" id="EX" name="dryness3" step="0.01" placeholder="Enter Dryness" value="{{ request.form['dryness3'] }}">
+    <select name="units_dryness3" id="dryness3-unit" class="input-unit">
+      <option value="f">fraction</option>
+      <option value="%">%</option>
+    </select>
+    </div>
+
+    
+    <br>
+    <button type="submit" value='Submit' onclick="showGraph()" onClick="selectInput()">Calculate</button><br>
+    <br>
+
+
+
+{% if result %}
+
+    <div id="result">
+      <h4>Result</h4>
+
+      <ul>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Phase: </span>
+          <input name="Phase" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fbf8f8;" value="{{result[2]}}">
+          </li>
+        </td>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Saturation Temperature: </span>
+          <input name="saturation" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa; " value="{{result[3]}}">
+          <select name="temperature-units" id="temperature-units" class="input-units">
+            <option value="C">°C</option>
+            <option value="F">°F</option>
+          </select>
+          </li>
+        </td>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Specific volume: </span>
+          <input name="volume" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fefdfd;" value="{{result[4]}}">
+          <select name="units" id="volume-units" class="input-units">
+            <option value="C">m<sup>3</sup>/kg</sup></option>
+          </select>
+          </li>
+        </td>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Density: </span>
+          <input name="density" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fbf9f9;" value="{{result[5]}}">
+          <select name="units" id="input-units" class="input-units">
+            <option value="C">kg/m<sup>3</sup></sup></option>
+          </select>
+          </li>
+        </td>
+        <td>
+          <li>
+            <span id="r" style="color:White;">Internal Energy: </span>
+            <input name="internal" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fbf8f8; " value="{{result[6]}}">
+            <select name="internal-units" id="internal-units" class="input-units">
+              <option value="C">kJ/kg</option>
+              <option value="F">J/kg</option>
+            </select>
+            </li>
+          </td>
+          <td>
+            <li>
+              <span id="r" style="color:White;">Specific Enthalpy: </span>
+              <input name="senthalpy" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fdfafa; " value="{{result[0]}}">
+              <select name="enthalpy-units" id="senthalpy-units" class="input-units">
+                <option value="C">kJ/kg</option>
+                <option value="F">J/kg</option>
+              </select>
+              </li>
+            </td>
+            <td>
+              <li>
+                <span id="r" style="color:White;">Specific Entropy: </span>
+                <input name="sentropy" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa; " value="{{result[1]}}">
+                <select name="entropy-units" id="sentropy-units" class="input-units">
+                  <option value="C">kJ/(kg-K)</option>
+                  <option value="F">J/(kg-K)</option>
+                </select>
+                </li>
+            </td>
+      </ul>
+     </div>
+
+{% endif %}
+
+
+
+{% if result_2 %}
+
+    <div id="result">
+      <h4>Result</h4>
+      <ul>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Phase: </span>
+          <input name="Phase" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fbf8f8; " value="{{result_2[2]}}">
+          </li>
+        </td>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Saturation Temperature: </span>
+          <input name="saturation" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa; " value="{{result_2[3]}}">
+          <select name="units" id="temperature-units" class="input-units">
+            <option value="C">°C</option>
+            <option value="F">°F</option>
+          </select>
+          </li>
+        </td>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Specific volume: </span>
+          <input name="volume" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fefdfd; " value="{{result_2[4]}}">
+          <select name="units" id="input-units" class="input-units">
+            <option value="C">m<sup>3</sup>/kg</sup></option>
+          </select>
+          </li>
+        </td>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Density: </span>
+          <input name="density" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fbf9f9;" value="{{result_2[5]}}">
+          <select name="units" id="input-units" class="input-units">
+            <option value="C">kg/m<sup>3</sup></sup></option>
+          </select>
+          </li>
+        </td>
+        <td>
+          <li>
+            <span id="r" style="color:White;">Internal Energy: </span>
+            <input name="internal" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fbf8f8; " value="{{result_2[6]}}">
+            <select name="units" id="internal-units" class="input-units">
+              <option value="C">kJ/kg</option>
+              <option value="F">J/kg</option>
+            </select>
+            </li>
+          </td>
+          <td>
+            <li>
+              <span id="r" style="color:White;">Temperature: </span>
+              <input name="stemp" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fdfafa;" value="{{result_2[0]}}">
+              <select name="units" id="stemperature-units" class="input-units">
+                <option value="C">°C</option>
+                <option value="F">°F</option>
+              </select>
+              </li>
+            </td>
+            <td>
+              <li>
+                <span id="r" style="color:White;">Specific Enthalpy: </span>
+                <input name="senthalpy" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa; " value="{{result_2[1]}}">
+                <select name="units" id="senthalpy-units" class="input-units">
+                  <option value="C">kJ/kg</option>
+                  <option value="F">J/kg</option>
+                </select>
+                </li>
+            </td>
+            <td>
+              <li>
+                <span id="r" style="color:White;">Dryness: </span>
+                <input name="sdry" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa;" value="{{result_2[7]}}">
+                <select name="units" id="s2dry-units" class="input-units">
+                  <option value="C">fraction</option>
+                  <option value="F">%</option>
+                </select>
+                </li>
+            </td>
+      </ul>
+     </div>
+
+{% endif %}
+     
+            
+
+{% if result_3 %}
+
+    <div id="result">
+      <h4>Result</h4>
+
+      <ul>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Phase: </span>
+          <input name="Phase" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fbf8f8;" value="{{result_3[2]}}">
+          </li>
+        </td>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Saturation Temperature: </span>
+          <input name="saturation" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa; " value="{{result_3[3]}}">
+          <select name="units" id="temperature-units" class="input-units">
+            <option value="C">°C</option>
+            <option value="F">°F</option>
+          </select>
+          </li>
+        </td>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Specific volume: </span>
+          <input name="volume" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fefdfd;" value="{{result_3[4]}}">
+          <select name="units" id="input-units" class="input-units">
+            <option value="C">m<sup>3</sup>/kg</sup></option>
+          </select>
+          </li>
+        </td>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Density: </span>
+          <input name="density" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fbf9f9;" value="{{result_3[5]}}">
+          <select name="units" id="input-units" class="input-units">
+            <option value="C">kg/m<sup>3</sup></sup></option>
+          </select>
+          </li>
+        </td>
+        <td>
+          <li>
+            <span id="r" style="color:White;">Internal Energy: </span>
+            <input name="internal" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fbf8f8;" value="{{result_3[6]}}">
+            <select name="units" id="internal-units" class="input-units">
+              <option value="C">kJ/kg</option>
+              <option value="F">J/kg</option>
+            </select>
+            </li>
+          </td>
+          <td>
+            <li>
+              <span id="r" style="color:White;">Temperature: </span>
+              <input name="stemp" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fdfafa;" value="{{result_3[0]}}">
+              <select name="units" id="stemperature-units" class="input-units">
+                <option value="C">°C</option>
+                <option value="F">°F</option>
+              </select>
+              </li>
+            </td>
+            <td>
+              <li>
+                <span id="r" style="color:White;">Specific Entropy: </span>
+                <input name="sentropy" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa;" value="{{result_3[1]}}">
+                <select name="units" id="sentropy-units" class="input-units">
+                  <option value="C">kJ/(kg-K)</option>
+                  <option value="F">J/(kg-K)</option>
+                </select>
+                </li>
+            </td>
+            <td>
+              <li>
+                <span id="r" style="color:White;">Dryness: </span>
+                <input name="sdry" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa;" value="{{result_3[7]}}">
+                <select name="units" id="sdry-units" class="input-units">
+                  <option value="C">fraction</option>
+                  <option value="F">%</option>
+                </select>
+                </li>
+            </td>
+      </ul>
+     </div>
+
+{% endif %}
+
+
+
+
+{% if result_4 %}
+
+    <div id="result">
+      <h4>Result</h4>
+
+      <ul>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Saturation Temperature: </span>
+          <input name="saturation" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa;" value="{{result_4[0]}}">
+          <select name="units" id="temperature-units" class="input-units">
+            <option value="C">°C</option>
+            <option value="F">°F</option>
+          </select>
+          </li>
+        </td>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Specific volume: </span>
+          <input name="volume" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fefdfd;" value="{{result_4[2]}}">
+          <select name="units" id="input-units" class="input-units">
+            <option value="C">m<sup>3</sup>/kg</sup></option>
+          </select>
+          </li>
+        </td>
+        <td>
+          <li>
+            <span id="r" style="color:White;">Internal Energy: </span>
+            <input name="internal" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fbf8f8;" value="{{result_4[4]}}">
+            <select name="units" id="internal-units" class="input-units">
+              <option value="C">kJ/kg</option>
+              <option value="F">J/kg</option>
+            </select>
+            </li>
+          </td>
+          <td>
+            <li>
+              <span id="r" style="color:White;">Specific Enthalpy: </span>
+              <input name="senthalpy" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa;" value="{{result_4[1]}}">
+              <select name="units" id="senthalpy-units" class="input-units">
+                <option value="C">kJ/kg</option>
+                <option value="F">J/kg</option>
+              </select>
+              </li>
+          </td>
+            <td>
+              <li>
+                <span id="r" style="color:White;">Specific Entropy: </span>
+                <input name="sentropy" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa;" value="{{result_4[3]}}">
+                <select name="units" id="sentropy-units" class="input-units">
+                  <option value="C">kJ/(kg-K)</option>
+                  <option value="F">J/(kg-K)</option>
+                </select>
+                </li>
+            </td>
+      </ul>
+     </div>
+
+{% endif %}
+
+{% if result_5 %}
+
+    <div id="result">
+      <h4>Result</h4>
+      <ul>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Phase: </span>
+          <input name="Phase" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fbf8f8;" value="{{result_5[2]}}">
+          </li>
+        </td>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Saturation Pressure: </span>
+          <input name="saturationP" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa;" value="{{result_5[3]}}">
+          <select name="units" id="saturationP-units" class="input-units">
+            <option value="C">MPa</option>
+            <option value="F">bar</option>
+          </select>
+          </li>
+        </td>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Specific volume: </span>
+          <input name="volume" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fefdfd;" value="{{result_5[4]}}">
+          <select name="units" id="input-units" class="input-units">
+            <option value="C">m<sup>3</sup>/kg</sup></option>
+          </select>
+          </li>
+        </td>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Density: </span>
+          <input name="density" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fbf9f9;" value="{{result_5[5]}}">
+          <select name="units" id="input-units" class="input-units">
+            <option value="C">kg/m<sup>3</sup></sup></option>
+          </select>
+          </li>
+        </td>
+        <td>
+          <li>
+            <span id="r" style="color:White;">Internal Energy: </span>
+            <input name="internal" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fbf8f8; " value="{{result_5[6]}}">
+            <select name="units" id="internal-units" class="input-units">
+              <option value="C">kJ/kg</option>
+              <option value="F">J/kg</option>
+            </select>
+            </li>
+          </td>
+          <td>
+            <li>
+              <span id="r" style="color:White;">Pressure: </span>
+              <input name="sP" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fdfafa;" value="{{result_5[0]}}">
+              <select name="units" id="sP-units" class="input-units">
+                <option value="C">MPa</option>
+                <option value="F">bar</option>
+              </select>
+              </li>
+            </td>
+            <td>
+              <li>
+                <span id="r" style="color:White;">Specific Enthalpy: </span>
+                <input name="senthalpy" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa;" value="{{result_5[1]}}">
+                <select name="units" id="senthalpy-units" class="input-units">
+                  <option value="C">kJ/kg</option>
+                  <option value="F">J/kg</option>
+                </select>
+                </li>
+            </td>
+            <td>
+              <li>
+                <span id="r" style="color:White;">Dryness: </span>
+                <input name="sdry" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa;" value="{{result_5[7]}}">
+                <select name="units" id="s2dry-units" class="input-units">
+                  <option value="C">fraction</option>
+                  <option value="F">%</option>
+                </select>
+                </li>
+            </td>
+      </ul>
+     </div>
+
+{% endif %}
+
+{% if result_6 %}
+
+<div id="result">
+  <h4>Result</h4>
+
+  <ul>
+    <td>
+      <li>
+      <span id="r" style="color:White;">Phase: </span>
+      <input name="Phase" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fbf8f8; " value="{{result_6[2]}}">
+      </li>
+    </td>
+    <td>
+      <li>
+      <span id="r" style="color:White;">Saturation Pressure: </span>
+      <input name="saturationP" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa; " value="{{result_6[3]}}">
+      <select name="units" id="saturationP-units" class="input-units">
+        <option value="C">MPa</option>
+        <option value="F">bar</option>
+      </select>
+      </li>
+    </td>
+    <td>
+      <li>
+      <span id="r" style="color:White;">Specific volume: </span>
+      <input name="volume" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fefdfd; " value="{{result_6[4]}}">
+      <select name="units" id="input-units" class="input-units">
+        <option value="C">m<sup>3</sup>/kg</sup></option>
+      </select>
+      </li>
+    </td>
+    <td>
+      <li>
+      <span id="r" style="color:White;">Density: </span>
+      <input name="density" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fbf9f9;" value="{{result_6[5]}}">
+      <select name="units" id="input-units" class="input-units">
+        <option value="C">kg/m<sup>3</sup></sup></option>
+      </select>
+      </li>
+    </td>
+    <td>
+      <li>
+        <span id="r" style="color:White;">Internal Energy: </span>
+        <input name="internal" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fbf8f8;" value="{{result_6[6]}}">
+        <select name="units" id="internal-units" class="input-units">
+          <option value="C">kJ/kg</option>
+          <option value="F">J/kg</option>
+        </select>
+        </li>
+      </td>
+      <td>
+        <li>
+          <span id="r" style="color:White;">Pressure: </span>
+          <input name="stemp" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fdfafa;" value="{{result_6[0]}}">
+          <select name="units" id="stemperature-units" class="input-units">
+            <option value="C">MPa</option>
+            <option value="F">bar</option>
+          </select>
+          </li>
+        </td>
+        <td>
+          <li>
+            <span id="r" style="color:White;">Specific Entropy: </span>
+            <input name="sentropy" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa;" value="{{result_6[1]}}">
+            <select name="units" id="sentropy-units" class="input-units">
+              <option value="C">kJ/(kg-K)</option>
+              <option value="F">J/(kg-K)</option>
+            </select>
+            </li>
+        </td>
+        <td>
+          <li>
+            <span id="r" style="color:White;">Dryness: </span>
+            <input name="sdry" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa; " value="{{result_6[7]}}">
+            <select name="units" id="sdry-units" class="input-units">
+              <option value="C">fraction</option>
+              <option value="F">%</option>
+            </select>
+            </li>
+        </td>
+  </ul>
+ </div>
+
+{% endif %}
+            
+            
+{% if result_7 %}
+
+    <div id="result">
+      <h4>Result</h4>
+
+      <ul>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Saturation Pressure: </span>
+          <input name="saturationP" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa;" value="{{result_7[0]}}">
+          <select name="units" id="saturationP-units" class="input-units">
+            <option value="C">MPa</option>
+            <option value="F">bar</option>
+          </select>
+          </li>
+        </td>
+        <td>
+          <li>
+          <span id="r" style="color:White;">Specific volume: </span>
+          <input name="volume" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fefdfd;" value="{{result_7[2]}}">
+          <select name="units" id="input-units" class="input-units">
+            <option value="C">m<sup>3</sup>/kg</sup></option>
+          </select>
+          </li>
+        </td>
+        <td>
+          <li>
+            <span id="r" style="color:White;">Internal Energy: </span>
+            <input name="internal" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fbf8f8; " value="{{result_7[4]}}">
+            <select name="units" id="internal-units" class="input-units">
+              <option value="C">kJ/kg</option>
+              <option value="F">J/kg</option>
+            </select>
+            </li>
+          </td>
+          <td>
+            <li>
+              <span id="r" style="color:White;">Specific Enthalpy: </span>
+              <input name="senthalpy" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa;" value="{{result_7[1]}}">
+              <select name="units" id="senthalpy-units" class="input-units">
+                <option value="C">kJ/kg</option>
+                <option value="F">J/kg</option>
+              </select>
+              </li>
+          </td>
+            <td>
+              <li>
+                <span id="r" style="color:White;">Specific Entropy: </span>
+                <input name="sentropy" type="text" readonly="readonly" id="d" style="color:Black;background-color:#fcfafa; " value="{{result_7[3]}}">
+                <select name="units" id="sentropy-units" class="input-units">
+                  <option value="C">kJ/(kg-K)</option>
+                  <option value="F">J/(kg-K)</option>
+                </select>
+                </li>
+            </td>
+      </ul>
+     </div>
+
+{% endif %}
+
+    
+
+
+{% if plot_div %}
+<div>
+    {{ plot_div|safe }}
+</div>
+{% endif %}            
+            
+
+
+
+
+
+
+
+
+</form>
+      </div>
+      <div class="sidebar">
+  
+      </div>
+    </div>
+ 
+ 
+
+<script src="/static/PT.js"></script>
+  </body>
+  
+  
+  <footer>
+    <hr>
+    <p>&copy; 2023 Steam Calculator</p>
+  </footer>
+  
+
+</html>
