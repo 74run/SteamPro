@@ -3,7 +3,9 @@ from flask import render_template,request,Flask
 import numpy as np
 import pandas as pd
 #import matplotlib.pyplot as plt
-import plotly.express as px
+import math as math
+
+#import plotly.express as px
 
 from scipy.interpolate import griddata
 
@@ -19,40 +21,129 @@ df_c.dropna(inplace=True)
 df_c=df_c.reset_index(drop=True)
 df=df_c
 
+dt = pd.read_csv("Entdry.csv")
+
+def enth_dry(h,x):
+    point = np.array(list(zip(dt['Enthalpy'],dt['dryness'])))
+    value = np.array(list(zip(dt['Entropy_L'],dt['Entropy_V'],dt['Entropy'],dt['Enthalpy_L'],dt['Enthalpy_V'],)))
+    q1 = griddata(point, value, (h,x), method='linear')
+    ETRL=round(q1[0],3)
+    ETRV=round(q1[1],3)
+    ETR=round(q1[2],3)
+    ETL=round(q1[3],3)
+    ETV=round(q1[4],3)
+
+    value = np.array(list(zip(df_t['Temperature'],df_t['P (MPa)'])))
+    point = np.array(list(zip(df_t['Enthalpy Vapor (kJ/kg)'],df_t['Enthalpy Liquid (kJ/kg)'])))
+    interpolated_value = griddata(point, value, (ETV,ETL), method='linear')
+    k=interpolated_value
+    t=round(k[0],3)
+    p=round(k[1],3)
+    return t,p,ETRL,ETRV,ETR,ETL,ETV
+
+
+
+def entr_dry(s,x):
+    point = np.array(list(zip(dt['Entropy'],dt['dryness'])))
+    value = np.array(list(zip(dt['Entropy_L'],dt['Entropy_V'],dt['Enthalpy'],dt['Enthalpy_L'],dt['Enthalpy_V'],)))
+    q1 = griddata(point, value, (s,x), method='linear')
+    ETRL=round(q1[0],3)
+    ETRV=round(q1[1],3)
+    ET=round(q1[2],3)
+    ETL=round(q1[3],3)
+    ETV=round(q1[4],3)
+
+    value = np.array(list(zip(df_t['Temperature'],df_t['P (MPa)'])))
+    point = np.array(list(zip(df_t['Enthalpy Vapor (kJ/kg)'],df_t['Enthalpy Liquid (kJ/kg)'])))
+    interpolated_value = griddata(point, value, (ETV,ETL), method='linear')
+    k=interpolated_value
+    t=round(k[0],3)
+    p=round(k[1],3)
+    return t,p,ETRL,ETRV,ET,ETL,ETV
+
+
 
 def steam_calculator(p,t):
 
-
-    points = np.array(list(zip(df['Pressure(MPa)'], df['Temperature'])))
-    values = np.array(list(zip(df['Specific_Enthalpy'],df['Specific_Entropy'],df['Specific_Internal_Energy'],df['Specific_Volume'],df['Density'])))
-    interpolated_value = griddata(points, values, (p,t), method='linear')
-    k=interpolated_value
-
-    Phase=[]
-
-    Enthalpy=round(float(k[0]),2)
-    Entropy=round(float(k[1]),2)
-    Internal_energy=round(float(k[2]),2)
-    Specific_volume=round(float(k[3]),5)
-    Density=round(float(k[4]),2)
-
     point = np.array(list(zip(de['Pressure(MPa)'])))
-    value = np.array(list(zip(de['Temperature'])))
+    value = np.array(list(zip(de['Temperature'],de['Specific_Enthalpy'])))
     q1 = griddata(point, value, (p), method='linear')
     Sat_Temp=round(float(q1[0]),2)
 
-    if p<22.12 and t > Sat_Temp :
-        Phase='Vapor'
-    elif p<22.12 and t < Sat_Temp :
-        Phase='Liquid'
-    elif p<22.12 and t==Sat_Temp :
-        Phase='Saturation Temperature'
+
+    if p<22.12 and t >= Sat_Temp :
+        if t==Sat_Temp :
+            Phase='Saturation Temperature'
+        else :
+            Phase='Vapor'
+
+        Phase=Phase
+        df=df_c1[df_c1["Phase"].isin(['Vapor','SaturatedVapor','SupercriticalFluid'])]
+        points = np.array(list(zip(df['Pressure(MPa)'], df['Temperature'])))
+        values = np.array(list(zip(df['Specific_Enthalpy'],df['Specific_Entropy'],df['Specific_Internal_Energy'],df['Specific_Volume'],df['Density'])))
+        interpolated_value = griddata(points, values, (p,t), method='linear')
+        k=interpolated_value
+
+        Enthalpy=round(float(k[0]),2)
+        Entropy=round(float(k[1]),2)
+        Internal_energy=round(float(k[2]),2)
+        Specific_volume=round(float(k[3]),5)
+        Density=round(float(k[4]),2)
+
+    elif p<22.12 and t <= Sat_Temp :
+        if t==Sat_Temp :
+            Phase='Saturation Temperature'
+        else :
+            Phase='Liquid'
+
+        Phase=Phase
+        df=df_c1[df_c1["Phase"].isin(['Liquid','SaturatedLiquid'])]
+        points = np.array(list(zip(df['Pressure(MPa)'], df['Temperature'])))
+        values = np.array(list(zip(df['Specific_Enthalpy'],df['Specific_Entropy'],df['Specific_Internal_Energy'],df['Specific_Volume'],df['Density'])))
+        interpolated_value = griddata(points, values, (p,t), method='linear')
+        k=interpolated_value
+
+        Enthalpy=round(float(k[0]),2)
+        Entropy=round(float(k[1]),2)
+        Internal_energy=round(float(k[2]),2)
+        Specific_volume=round(float(k[3]),5)
+        Density=round(float(k[4]),2)
+
     elif p > 22.12 and t > 374 :
-        Phase='Super Critical Fluid'
+
         Sat_Temp='No Saturation Temperature'
+
+        Phase='Vapor'
+
+        df=df_c1[df_c1["Phase"].isin(['Vapor','SupercriticalFluid'])]
+        points = np.array(list(zip(df['Pressure(MPa)'], df['Temperature'])))
+        values = np.array(list(zip(df['Specific_Enthalpy'],df['Specific_Entropy'],df['Specific_Internal_Energy'],df['Specific_Volume'],df['Density'])))
+        interpolated_value = griddata(points, values, (p,t), method='linear')
+        k=interpolated_value
+
+
+
+        Enthalpy=round(float(k[0]),2)
+        Entropy=round(float(k[1]),2)
+        Internal_energy=round(float(k[2]),2)
+        Specific_volume=round(float(k[3]),5)
+        Density=round(float(k[4]),2)
+
     elif p > 22.12 and t < 374:
         Phase='Liquid'
         Sat_Temp='No Saturation Temperature'
+
+        df=df_c1[df_c1["Phase"].isin(['Liquid'])]
+        points = np.array(list(zip(df['Pressure(MPa)'], df['Temperature'])))
+        values = np.array(list(zip(df['Specific_Enthalpy'],df['Specific_Entropy'],df['Specific_Internal_Energy'],df['Specific_Volume'],df['Density'])))
+        interpolated_value = griddata(points, values, (p,t), method='linear')
+        k=interpolated_value
+
+        Enthalpy=round(float(k[0]),2)
+        Entropy=round(float(k[1]),2)
+        Internal_energy=round(float(k[2]),2)
+        Specific_volume=round(float(k[3]),5)
+        Density=round(float(k[4]),2)
 
 
     Ph=Phase
@@ -62,7 +153,7 @@ def steam_calculator(p,t):
     return Enthalpy,Entropy,Ph,Sat_Temp,Specific_volume,Density,Internal_energy
 
 def steam_entropy(p,s):
-    
+
     if p<22.12 :
         point = np.array(list(zip(df_p['P (MPa)'])))
         value = np.array(list(zip(df_p['Entropy Vapor [kJ/(kg K)]'],df_p['Entropy Liquid [kJ/(kg K)]'])))
@@ -108,7 +199,7 @@ def steam_entropy(p,s):
             value = np.array(list(zip(de['Temperature'])))
             q1 = griddata(point, value, (p), method='linear')
             Sat_Temp=round(float(q1[0]),2)
-            
+
             if p<22.12 and t > Sat_Temp :
                 x=1
                 Phase='Vapor'
@@ -134,7 +225,7 @@ def steam_entropy(p,s):
         value = np.array(list(zip(de['Temperature'])))
         q1 = griddata(point, value, (p), method='linear')
         Sat_Temp=round(float(q1[0]),2)
-        
+
         if p > 22.12 and t > 374 :
             Phase='Super Critical Fluid'
             x=1
@@ -146,7 +237,7 @@ def steam_entropy(p,s):
     return t,Enthalpy,Ph,Sat_Temp,Specific_volume,Density,Internal_energy,x
 
 def steam_enthalpy(p,h):
-    
+
     if p<22.12 :
         point = np.array(list(zip(df_p['P (MPa)'])))
         value = np.array(list(zip(df_p['Enthalpy Vapor (kJ/kg)'],df_p['Enthalpy Liquid (kJ/kg)'])))
@@ -186,7 +277,7 @@ def steam_enthalpy(p,h):
             t=round(float(k[0]),2)
             Entropy=round(float(k[1]),2)
             Internal_energy=round(float(k[2]),2)
-            
+
             Density=round(float(k[4]),2)
             Specific_volume=round((1/Density),5)
 
@@ -194,7 +285,7 @@ def steam_enthalpy(p,h):
             value = np.array(list(zip(de['Temperature'])))
             q1 = griddata(point, value, (p), method='linear')
             Sat_Temp=round(float(q1[0]),2)
-            
+
             if p<22.12 and t > Sat_Temp :
                 x=1
                 Phase='Vapor'
@@ -214,14 +305,14 @@ def steam_enthalpy(p,h):
         t=round(float(k[0]),2)
         Entropy=round(float(k[1]),2)
         Internal_energy=round(float(k[2]),2)
-        
+
         Density=round(float(k[4]),2)
         Specific_volume=round((1/Density),5)
         point = np.array(list(zip(de['Pressure(MPa)'])))
         value = np.array(list(zip(de['Temperature'])))
         q1 = griddata(point, value, (p), method='linear')
         Sat_Temp=round(float(q1[0]),2)
-        
+
         if p > 22.12 and t > 374 :
             x=1
             Phase='Super Critical Fluid'
@@ -256,7 +347,7 @@ def steam_dry(p,x):
     return t,E,SV,ETR,IE
 
 def temp_enthalpy(t,h):
-    
+
     if t<374 :
         point = np.array(list(zip(df_t['Temperature'])))
         value = np.array(list(zip(df_t['Enthalpy Vapor (kJ/kg)'],df_t['Enthalpy Liquid (kJ/kg)'])))
@@ -296,15 +387,15 @@ def temp_enthalpy(t,h):
             p=round(float(k[0]),2)
             Entropy=round(float(k[1]),2)
             Internal_energy=round(float(k[2]),2)
-            
+
             Density=round(float(k[4]),2)
             Specific_volume=round((1/Density),5)
-            
+
             point = np.array(list(zip(df_t['Temperature'])))
             value = np.array(list(zip(df_t['P (MPa)'])))
             q1 = griddata(point, value, (t), method='linear')
             Sat_p=round(float(q1[0]),2)
-            
+
             if h > EV:
                 x=1
                 Phase='Vapor'
@@ -324,14 +415,14 @@ def temp_enthalpy(t,h):
         p=round(float(k[0]),2)
         Entropy=round(float(k[1]),2)
         Internal_energy=round(float(k[2]),2)
-        
+
         Density=round(float(k[4]),2)
         Specific_volume=round((1/Density),5)
         point = np.array(list(zip(df_t['Temperature'])))
         value = np.array(list(zip(df_t['P (MPa)'])))
         q1 = griddata(point, value, (t), method='linear')
         Sat_p=round(float(q1[0]),2)
-        
+
         if p > 22.12 and t > 374 :
             x=1
             Phase='Super Critical Fluid'
@@ -343,7 +434,7 @@ def temp_enthalpy(t,h):
     return p,Entropy,Ph,Sat_p,Specific_volume,Density,Internal_energy,x
 
 def temp_entropy(t,s):
-    
+
     if t<374 :
         point = np.array(list(zip(df_t['Temperature'])))
         value = np.array(list(zip(df_t['Entropy Vapor [kJ/(kg K)]'],df_t['Entropy Liquid [kJ/(kg K)]'])))
@@ -383,15 +474,15 @@ def temp_entropy(t,s):
             p=round(float(k[0]),2)
             Enthalpy=round(float(k[1]),2)
             Internal_energy=round(float(k[2]),2)
-            
+
             Density=round(float(k[4]),2)
             Specific_volume=round((1/Density),5)
-            
+
             point = np.array(list(zip(df_t['Temperature'])))
             value = np.array(list(zip(df_t['P (MPa)'])))
             q1 = griddata(point, value, (t), method='linear')
             Sat_p=round(float(q1[0]),2)
-            
+
             if s > ETRV:
                 x=1
                 Phase='Vapor'
@@ -411,14 +502,14 @@ def temp_entropy(t,s):
         p=round(float(k[0]),2)
         Enthalpy=round(float(k[1]),2)
         Internal_energy=round(float(k[2]),2)
-        
+
         Density=round(float(k[4]),2)
         Specific_volume=round((1/Density),5)
         point = np.array(list(zip(df_t['Temperature'])))
         value = np.array(list(zip(df_t['P (MPa)'])))
         q1 = griddata(point, value, (t), method='linear')
         Sat_p=round(float(q1[0]),2)
-        
+
         if p > 22.12 and t > 374 :
             x=1
             Phase='Super Critical Fluid'
@@ -454,9 +545,138 @@ def temp_dry(t,x):
     return Sat_p,Enthalpy,Specific_volume,Entropy,Internal_energy
 
 
+def enth_entropy(h,s):
+    point = np.array(list(zip(dt['Enthalpy'],dt['Entropy'])))
+    value = np.array(list(zip(dt['dryness'],dt['Enthalpy_L'],dt['Enthalpy_V'],dt['Entropy_L'],dt['Entropy_V'])))
+    q1 = griddata(point, value, (h,s), method='linear')
+    x1=q1[0]
+    ETL=q1[1]
+    ETV=q1[2]
+    ETRL=q1[3]
+    ETRV=q1[4]
+    # plt.scatter(SF['Specific_Entropy'],SF['Specific_Enthalpy'],color='orange')
+    # plt.scatter(Test['Specific_Entropy'],Test['Specific_Enthalpy'],color='black')
+    # plt.scatter(de['Specific_Entropy'],de['Specific_Enthalpy'],c=de['Temperature'])
+    # plt.scatter(s,h)
+
+    if math.isnan(x1):
+        #print("The value does not exist or is NaN.")
+        points = np.array(list(zip(df['Specific_Enthalpy'], df['Specific_Entropy'])))
+        values = np.array(list(zip(df['Pressure(MPa)'],df['Temperature'])))
+        interpolated_value = griddata(points, values, (h,s), method='linear')
+        k=interpolated_value
+        Phase=[]
+        p=round(float(k[0]),2)
+        t=round(float(k[1]),2)
+        if p<22.12 :
+            point = np.array(list(zip(df_p['P (MPa)'])))
+            value = np.array(list(zip(df_p['Entropy Vapor [kJ/(kg K)]'],df_p['Entropy Liquid [kJ/(kg K)]'])))
+            interpolated_value = griddata(point, value, (p), method='linear')
+            k=interpolated_value
+            ETRV=k[0]
+            ETRL=k[1]
+            points = np.array(list(zip(df['Pressure(MPa)'], df['Specific_Entropy'])))
+            values = np.array(list(zip(df['Temperature'],df['Specific_Enthalpy'],df['Specific_Internal_Energy'],df['Specific_Volume'],df['Density'])))
+            interpolated_value = griddata(points, values, (p,s), method='linear')
+            k=interpolated_value
+            Phase=[]
+            t=round(float(k[0]),2)
+            Enthalpy=round(float(k[1]),2)
+            Internal_energy=round(float(k[2]),2)
+            Specific_volume=round(float(k[3]),5)
+            Density=round(float(k[4]),2)
+            point = np.array(list(zip(de['Pressure(MPa)'])))
+            value = np.array(list(zip(de['Temperature'])))
+            q1 = griddata(point, value, (p), method='linear')
+            Sat_Temp=round(float(q1[0]),2)
+
+            if p<22.12 and t > Sat_Temp :
+                x=1
+                Phase='Vapor'
+            elif p<22.12 and t < Sat_Temp :
+                x=0
+                Phase='Liquid'
+            elif p<22.12 and t==Sat_Temp :
+                Phase='Saturation Temperature'
+            Ph=Phase
+        else:
+            q='g22.12'
+            points = np.array(list(zip(df['Pressure(MPa)'], df['Specific_Entropy'])))
+            values = np.array(list(zip(df['Temperature'],df['Specific_Enthalpy'],df['Specific_Internal_Energy'],df['Specific_Volume'],df['Density'])))
+            interpolated_value = griddata(points, values, (p,s), method='linear')
+            k=interpolated_value
+            Phase=[]
+            t=round(float(k[0]),2)
+            Enthalpy=round(float(k[1]),2)
+            Internal_energy=round(float(k[2]),2)
+            Specific_volume=round(float(k[3]),5)
+            Density=round(float(k[4]),2)
+            point = np.array(list(zip(de['Pressure(MPa)'])))
+            value = np.array(list(zip(de['Temperature'])))
+            q1 = griddata(point, value, (p), method='linear')
+            Sat_Temp=round(float(q1[0]),2)
+
+            if p > 22.12 and t > 374 :
+                Phase='Super Critical Fluid'
+                Sat_Temp='No Saturation Temperature'
+                x=1
+            elif p > 22.12 and t < 374:
+                x=0
+                Phase='Liquid'
+                Sat_Temp='No Saturation Temperature'
+            Ph=Phase
+
+
+    else:
+
+        point = np.array(list(zip(dt['Enthalpy'],dt['Entropy'])))
+        value = np.array(list(zip(dt['dryness'],dt['Enthalpy_L'],dt['Enthalpy_V'],dt['Entropy_L'],dt['Entropy_V'])))
+        q1 = griddata(point, value, (h,s), method='linear')
+        x=round(q1[0],3)
+        ETL=q1[1]
+        ETV=q1[2]
+        ETRL=q1[3]
+        ETRV=q1[4]
+
+        value = np.array(list(zip(df_t['Temperature'],df_t['P (MPa)'])))
+        point = np.array(list(zip(df_t['Enthalpy Vapor (kJ/kg)'],df_t['Enthalpy Liquid (kJ/kg)'])))
+        interpolated_value = griddata(point, value, (ETV,ETL), method='linear')
+        k=interpolated_value
+        t=round(k[0],3)
+        p=round(k[1],3)
+
+        Ph= 'Saturated'
+        points = np.array(list(zip(df_p['P (MPa)'],df_p['T (C)'])))
+        values = np.array(list(zip(df_p['Specific Volume Liquid (m^3/kg)'],df_p['Specific Volume Vapor (m^3/kg)'],df_p['Internal Energy Liquid (kJ/kg)'],df_p['Internal Energy Vapor (kJ/kg)'],df_p['Internal Energy of Vaporization (kJ/kg)'],df_p['Enthalpy Liquid (kJ/kg)'],df_p['Enthalpy Vapor (kJ/kg)'],df_p['Enthalpy of Vaporization (kJ/kg)'],df_p['Entropy Liquid [kJ/(kg K)]'],df_p['Entropy Vapor [kJ/(kg K)]'],df_p['Entropy of Vaporization [kJ/(kg K)]'])))
+        interpolated_value = griddata(points, values, (p,t), method='linear')
+        k=interpolated_value
+        Sat_Temp=k[0]
+        #t=round(Sat_Temp,2)
+        SVL=k[0]
+        SVV=k[1]
+        IEL=k[2]
+        IEV=k[3]
+        EL=k[5]
+        EV=k[6]
+
+        Enthalpy=round(EL+x*(EV-EL),2)
+        Specific_volume=round(SVL+x*(SVV-SVL),5)
+        Internal_energy=round(IEL+x*(IEV-IEL),2)
+        Density=round((1/Specific_volume),3)
+
+    return p,t,Ph,Sat_Temp,Specific_volume,Density,Internal_energy,x
+
+
 
 
 app=Flask(__name__)
+
+
+
+
+
+
+
 
 
 @app.route('/')
@@ -467,6 +687,7 @@ def home():
 @app.route('/result', methods=['GET','POST'])
 
 def index():
+
     result= None
     result_2 = None
     result_3 = None
@@ -474,17 +695,21 @@ def index():
     result_5 = None
     result_6 = None
     result_7 = None
+    result_8 = None
+    result_9 = None
+    result_10= None
     if request.method=='POST':
         function_name=request.form['condition']
-        
-        fig = px.line(df_t, x='Entropy Vapor [kJ/(kg K)]', y='Enthalpy Vapor (kJ/kg)', color_discrete_sequence=['red'])
-        fig.add_scatter(x=df_t['Entropy Vapor [kJ/(kg K)]'], y=df_t['Enthalpy Vapor (kJ/kg)'], marker=dict(color='red', size=10),name='Vapor line')
-        fig.add_scatter(x=df_t['Entropy Liquid [kJ/(kg K)]'], y=df_t['Enthalpy Liquid (kJ/kg)'], marker=dict(color='blue', size=10),name='Liquid line')
-        fig.update_xaxes(title_text="Entropy")
-        fig.update_yaxes(title_text="Enthalpy")
+        # fig = px.line(df_t, x='Entropy Vapor [kJ/(kg K)]', y='Enthalpy Vapor (kJ/kg)', color_discrete_sequence=['red'])
+        # fig.add_scatter(x=df_t['Entropy Vapor [kJ/(kg K)]'], y=df_t['Enthalpy Vapor (kJ/kg)'], marker=dict(color='red', size=10),name='Vapor line')
+        # fig.add_scatter(x=df_t['Entropy Liquid [kJ/(kg K)]'], y=df_t['Enthalpy Liquid (kJ/kg)'], marker=dict(color='blue', size=10),name='Liquid line')
+        # fig.update_xaxes(title_text="Entropy")
+        # fig.update_yaxes(title_text="Enthalpy")
 
-        # Render the template with the plot
-        plot_div = fig.to_html(full_html=False)
+        # #Render the template with the plot
+        # plot_div = fig.to_html(full_html=False)
+
+
 
         if function_name=='PT':
             pressure_unit = request.form['units_pressure']
@@ -493,13 +718,12 @@ def index():
             t=float(request.form['temperature'])
             if pressure_unit == "BAR":
                 p= p*0.1
-            
+
             if temperature_unit == "F":
                 t = (t - 32) * 5/9
 
             result=steam_calculator(p,t)
 
-            
 
         elif function_name=='PE':
             pressure_unit1 = request.form['units_pressure1']
@@ -508,11 +732,11 @@ def index():
             s=float(request.form['entropy'])
             if pressure_unit1 == "BAR":
                 p= p*0.1
-            
+
             if entropy_unit == "J/kg-K":
                 s= s/1000
             result_2=steam_entropy(p,s)
-            
+
 
         elif function_name=='PH':
             pressure_unit2 = request.form['units_pressure2']
@@ -524,7 +748,7 @@ def index():
             if enthalpy_unit == "J/kg":
                 h=h/1000
             result_3=steam_enthalpy(p,h)
-        
+
         elif function_name=='PX':
             pressure_unit3 = request.form['units_pressure3']
             dryness_unit =request.form['units_dryness']
@@ -567,12 +791,43 @@ def index():
                 x = x/100
             result_7= temp_dry(t,x)
 
-     
+        elif function_name=='HE':
+            enthalpy_unit2 =request.form['units_enthalpy2']
+            entropy_unit2 =request.form['units_entropy2']
+            h= float(request.form['enthalpy2'])
+            s= float(request.form['entropy2'])
+            if enthalpy_unit2 == "J/kg":
+                h = h/1000
+            if entropy_unit2 == "J/kg-K":
+                s = s/1000
+            result_8 = enth_entropy(h,s)
 
-        
-    return render_template("PT.html",plot_div=plot_div, result=result, result_2=result_2, result_3=result_3, result_4=result_4,result_5=result_5,result_6=result_6,result_7=result_7)
+        elif function_name=='HX':
+            enthalpy_unit3 =request.form['units_enthalpy3']
+            dryness_unit2 =request.form['units_dryness2']
+            h= float(request.form['enthalpy3'])
+            x= float(request.form['dryness2'])
+            if enthalpy_unit3 == "J/kg":
+                h = h/1000
+            if dryness_unit2 == "%":
+                x = x/100
+            result_9 = enth_dry(h,x)
 
+        elif function_name=='EX':
+            entropy_unit3 =request.form['units_entropy3']
+            dryness_unit3 =request.form['units_dryness3']
+            s= float(request.form['entropy3'])
+            x= float(request.form['dryness3'])
+            if entropy_unit3 == "J/kg-K":
+                s = s/1000
+            if dryness_unit3 == "%":
+                x = x/100
+            result_10 = entr_dry(s,x)
+
+
+
+
+    return render_template("PT.html",result=result, result_2=result_2, result_3=result_3, result_4=result_4,result_5=result_5,result_6=result_6,result_7=result_7,result_8=result_8,result_9=result_9,result_10=result_10)
 
 if __name__ == '__main__':
-    from werkzeug.serving import run_simple
-    run_simple('localhost', 5000, app)
+    app.run(host='0.0.0.0', port=3000)
