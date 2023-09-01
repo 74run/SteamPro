@@ -28,6 +28,64 @@ margin-left: 0px;
 
 }
 
+.message p {
+  background-color: black; /* Add a background color to the header */
+  padding: 0px; /* Add padding to the header */
+  text-align: center; /* Center the text in the header */
+  /* color: #fff; Add a color to the text in the header */
+  font-size: 100%; /* Change the font size of the text in the header */
+  font-weight: bold; /* Change the font weight of the text in the header */
+  font-family: 'Open Sans', sans-serif; /* Change the font family of the*/
+  opacity: 100%;
+  display: block;
+  justify-content: center;
+  /* text-align: center; */
+  align-items: center;
+  margin-left: 0px;
+  background-color: white;
+  color: #000;
+  padding: 10px;
+  border-radius: 10px;
+
+
+  }
+
+
+
+  .message-container {
+
+    background-color: linear-gradient(to right, #2000d4, #d40000);
+    border: 40px solid black;
+    overflow: hidden;
+  }
+
+  .message {
+    background-color: gainsboro;
+    padding: 10px;
+    position: relative;
+    bottom: -100px;
+    animation: slide-up 1s forwards;
+    border-radius: 10px;
+  }
+
+  @keyframes slide-up {
+    from {
+      bottom: -200px;
+    }
+    to {
+      bottom: 0;
+    }
+  }
+
+
+
+  footer {
+    background-color: #000;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+  }
+
 
 form {
 /*background-image: url("https://free4kwallpapers.com/uploads/originals/2019/08/12/ice-and-glaciers-wallpaper.jpg");*/
@@ -103,14 +161,14 @@ select:hover {
 background-color: #e5e5e5; /* Change the background color of the dropdown box when hovered */
 cursor: pointer; /* Change the cursor to a pointer when hovered */
 opacity: 95%;
-  
+
 }
 
 select:active {
   background-color: #d5d5d5; /* Change the background color of the dropdown box when active */
   cursor: pointer; /* Change the cursor to a pointer when active */
-  
-  
+
+
   }
 
 label, input, select, span {
@@ -131,11 +189,11 @@ label, input, select, span {
   width: 90%;
   margin-left: 50px;
   margin-top: 40px;
-  
+
   font-weight: bold;
   border-radius: 8px; /* Add rounded edges to the input fields */
   padding: 10px 20px; /* Add padding to the select input */
- 
+
   border: 1px solid #ccc; /* Remove the border of the select input */
   background-color: #f5f5f5; /* Add a background color to the dropdown box */
   margin-bottom: 30px;
@@ -143,7 +201,7 @@ label, input, select, span {
   -webkit-appearance: none; /* Remove the default appearance of the dropdown box for webkit browsers */
   -moz-appearance: none; /* Remove the default appearance of the dropdown box for mozilla browsers */
   -webkit-border-radius: 0; /* Remove the rounded edges of the dropdown box */
- 
+
 
 }
 
@@ -156,7 +214,7 @@ label, input, select, span {
   width: 20%;
   position: relative;
   right: 9%;
-  
+
 }
 
 #pressure-error, #temperature-error {
@@ -222,15 +280,15 @@ input {
   vertical-align: middle;
   height: 30px;
   font-size: 18px;
- 
+
   color: black;
   text-align: center; /* Center the text in the result section */
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2); /* Add a box-shadow to the result section */
   margin-bottom: 20px;
   font-weight: bold; /* Change the font weight of the text in the header */
 
-  
-  
+
+
   }
 label {
   color: white;
@@ -245,9 +303,9 @@ label {
   position: relative;
   margin-bottom: 20px;
   left:15%;
-  
-  
-  
+
+
+
   }
 
 span {
@@ -275,8 +333,31 @@ span {
   align-items: center;
   width: 25%;
   left:2%;
-  
+
 }
+
+#V {
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  display: inline-block;
+  margin-right: 20px;
+}
+
+#visitor {
+  font-size: 18px;
+  color: black;
+  background-color: white;
+  border: none;
+  text-align: center;
+  display: inline-block;
+  width: 25%;
+
+
+}
+#visitor:focus {
+            outline: none;
+            }
 
 
 #d{
@@ -331,7 +412,7 @@ span, input, select {
       display: flex;
       position: relative;
       left:55%;
-    
+
       }
 
  nav{
@@ -343,14 +424,8 @@ span, input, select {
     z-index: 100;
   }
 
-  footer {
-    background-color: #000;
-    color: #fff;
-    padding: 20px;
-    text-align: center;
-  }
- 
- 
+
+
 
 
 
@@ -362,14 +437,14 @@ span, input, select {
         height: 100%;
         box-sizing: border-box;
       }
-      
+
       /* Style for the main content */
       .main {
-        
+
         padding: 20px;
         box-sizing: border-box;
       }
-      
+
       /* Style for the page container */
       .container {
         display: flex;
@@ -377,6 +452,21 @@ span, input, select {
       }
 
       /* Media query for screens smaller than 768px */
+
+
+#plot {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: white;
+}
+
+
+
+
  @media screen and (max-width: 768px) {
         .sidebar {
           display: none;
@@ -385,7 +475,7 @@ span, input, select {
           width: 100%;
         }
         #input-select{
-        
+
           border-radius: 4px;
           font-size: 75%;
           margin-right: 25%;
@@ -408,8 +498,8 @@ span, input, select {
           font-size: 75%;
         }
 
-   
-        
+
+
 
         span, input, select {
           display: inline-block;
@@ -419,10 +509,10 @@ span, input, select {
           text-align: center;
           align-items: center;
           font-size: 75%;
-        
+
         }
 
-        
+
 
         #r{
           color: white;
@@ -441,7 +531,7 @@ span, input, select {
 
         #d{
           display: inline-block;
-         
+
           text-align: center;
           font-size: 75%;
           width: 35%;
@@ -452,18 +542,18 @@ span, input, select {
 
         .PT, #PE, #PH, #PX, #TE,#TH,#TX,#HE,#HX,#EX{
           display: inline-block;
-          
+
           text-align: center;
           font-size: 75%;
           width: 35%;
           position: relative;
           margin: 0 0% 4% 0%;
           left: 2%;
-          
+
         }
 
 
-  
+
 
 
 
@@ -474,7 +564,7 @@ span, input, select {
           vertical-align: middle;
           line-height: 1;
           width: 18%;
-          
+
           left: 6%;
           font-size: 75%;
           background-color: white;
@@ -484,7 +574,7 @@ span, input, select {
           padding: 1% 1%;
           font-weight: bold;
 
-        
+
         }
 
 
@@ -494,11 +584,11 @@ span, input, select {
           position: relative;
           justify-content: right;
           text-align: center;
-      
+
           vertical-align: middle;
           line-height: 1;
           width: 18%;
-          
+
           font-size: 75%;
           background-color: white;
           color: black;
@@ -507,7 +597,7 @@ span, input, select {
           left: 6%;
           padding: 1% 1%;
           font-weight: bold;
-          
+
         }
 
         #logo {
@@ -517,12 +607,12 @@ span, input, select {
             display: flex;
             position: relative;
             left:0%;
-          
+
             }
 
-   
 
-  
+
+
         button {
           background-color: #6200EE; /* Change the background color of the submit button */
           color: white; /* Change the text color of the submit button */
@@ -542,14 +632,37 @@ span, input, select {
           border: 1px solid #ccc; /* Add a border to the form elements */
           position: relative;
           right: 0%;
-          
+
           }
 
-       
+          #V {
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  display: inline-block;
+  margin-right: 20px;
+}
 
-          
-          
-     
+#visitor {
+  font-size: 18px;
+  color: black;
+  background-color: white;
+  border: none;
+  text-align: center;
+  display: inline-block;
+  width: 25%;
+
+
+}
+#visitor:focus {
+            outline: none;
+            }
+
+
+
+
+
+
 
           ul {
             display: block;
@@ -560,10 +673,32 @@ span, input, select {
             margin-inline-end: 0px;
             padding-inline-start: 25px;
         }
-          
+
 
 
       }
+
+
+
+#plot {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    padding-top: 56.25%; /* 16:9 aspect ratio (9 / 16 * 100) */
+    margin: 0 auto;
+    box-sizing: border-box;
+    overflow: hidden;
+	background-color: white;
+}
+
+#plot > div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
 
       /* Media query for screens larger than 768px */
       @media screen and (min-width: 768px) {
