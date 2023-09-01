@@ -2,10 +2,9 @@ from flask import render_template,request,Flask
 #from Steam import steam_calculator
 import numpy as np
 import pandas as pd
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import math as math
-
-#import plotly.express as px
+import mpld3
 
 from scipy.interpolate import griddata
 
@@ -700,14 +699,24 @@ def index():
     result_10= None
     if request.method=='POST':
         function_name=request.form['condition']
-        # fig = px.line(df_t, x='Entropy Vapor [kJ/(kg K)]', y='Enthalpy Vapor (kJ/kg)', color_discrete_sequence=['red'])
-        # fig.add_scatter(x=df_t['Entropy Vapor [kJ/(kg K)]'], y=df_t['Enthalpy Vapor (kJ/kg)'], marker=dict(color='red', size=10),name='Vapor line')
-        # fig.add_scatter(x=df_t['Entropy Liquid [kJ/(kg K)]'], y=df_t['Enthalpy Liquid (kJ/kg)'], marker=dict(color='blue', size=10),name='Liquid line')
-        # fig.update_xaxes(title_text="Entropy")
-        # fig.update_yaxes(title_text="Enthalpy")
+        plt.grid(color='black')
+        # Create a figure and plot the lines
+        plt.plot(df_t['Entropy Vapor [kJ/(kg K)]'], df_t['Enthalpy Vapor (kJ/kg)'], 'ro-', label='Vapor line', markersize=10)
+        plt.plot(df_t['Entropy Liquid [kJ/(kg K)]'], df_t['Enthalpy Liquid (kJ/kg)'], 'bo-', label='Liquid line', markersize=10)
 
-        # #Render the template with the plot
-        # plot_div = fig.to_html(full_html=False)
+        # Set axis labels
+        plt.xlabel("Entropy", color='black')
+        plt.ylabel("Enthalpy", color='black')
+        
+
+        # Add a legend
+        plt.legend()
+        
+        plt.xticks(color='white')  # Change 'green' to your desired color for x-axis
+        plt.yticks(color='blue')
+
+        # Convert the figure to an HTML plot
+        plot_div = mpld3.fig_to_html(plt.gcf())
 
 
 
@@ -827,7 +836,7 @@ def index():
 
 
 
-    return render_template("PT.html",result=result, result_2=result_2, result_3=result_3, result_4=result_4,result_5=result_5,result_6=result_6,result_7=result_7,result_8=result_8,result_9=result_9,result_10=result_10)
+    return render_template("PT.html",plot_div=plot_div, result=result, result_2=result_2, result_3=result_3, result_4=result_4,result_5=result_5,result_6=result_6,result_7=result_7,result_8=result_8,result_9=result_9,result_10=result_10)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000)
